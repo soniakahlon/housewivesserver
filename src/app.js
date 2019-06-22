@@ -7,6 +7,7 @@ const { NODE_ENV } = require('./config');
 const restosRouter = require('./restos/restos-router');
 const commentsRouter = require('./comments/comments-router');
 const authRouter = require('./auth/auth-router')
+const usersRouter = require('./users/users-router')
 
 
 
@@ -24,6 +25,7 @@ app.use(helmet());
 app.use('/api/restaurants', restosRouter);
 app.use('/api/comments', commentsRouter);
 app.use('/api/auth', authRouter)
+app.use('/api/users', usersRouter)
 
 
 app.get('/', (req, res) => {
