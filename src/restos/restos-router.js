@@ -2,6 +2,8 @@ const path = require('path');
 const express = require('express');
 const xss = require('xss'); 
 const RestosService = require('./restos-service');
+const { requireAuth } = require('../middleware/jwt-auth')
+
 
 const restosRouter = express.Router();
 const jsonParser = express.json();
@@ -16,6 +18,8 @@ const serializeRestos = (restaurant) => ({
 
 restosRouter
   .route('/')
+  .all(requireAuth)
+
   .get((req, res, next) => {
     const knexInstance = req.app.get('db');
     RestosService.getAllRestos(knexInstance)
@@ -61,6 +65,7 @@ restosRouter
 
 restosRouter
   .route('/:restaurant_id')
+  .all(requireAuth)
   .all((req, res, next) => {
     RestosService.getRestoById(
       req.app.get('db'),

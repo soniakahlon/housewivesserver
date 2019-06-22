@@ -4,7 +4,11 @@ const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
 const { NODE_ENV } = require('./config');
-const restosRouter = require('./restaurants/restos-router');
+const restosRouter = require('./restos/restos-router');
+const commentsRouter = require('./comments/comments-router');
+const authRouter = require('./auth/auth-router')
+
+
 
 
 const app = express();
@@ -18,6 +22,9 @@ app.use(cors());
 app.use(helmet());
 
 app.use('/api/restaurants', restosRouter);
+app.use('/api/comments', commentsRouter);
+app.use('/api/auth', authRouter)
+
 
 app.get('/', (req, res) => {
        res.send('Hello, world!')
