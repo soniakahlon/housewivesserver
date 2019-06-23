@@ -3,12 +3,12 @@ const xss = require('xss')
 const CommentsService = {
   getById(db, id) {
     return db
-      .from('blogful_comments AS comm')
+      .from('comments AS comm')
       .select(
         'comm.id',
         'comm.text',
         'comm.date_created',
-        'comm.article_id',
+        'comm.restaurant_id',
         db.raw(
           `json_strip_nulls(
             row_to_json(
@@ -16,8 +16,6 @@ const CommentsService = {
                 SELECT
                   usr.id,
                   usr.user_name,
-                  usr.full_name,
-                  usr.nickname,
                   usr.date_created,
                   usr.date_modified
               ) tmp)
@@ -26,7 +24,7 @@ const CommentsService = {
         )
       )
       .leftJoin(
-        'blogful_users AS usr',
+        'users AS usr',
         'comm.user_id',
         'usr.id',
       )
@@ -37,7 +35,7 @@ const CommentsService = {
   insertComment(db, newComment) {
     return db
       .insert(newComment)
-      .into('blogful_comments')
+      .into('comments')
       .returning('*')
       .then(([comment]) => comment)
       .then(comment =>
@@ -50,13 +48,11 @@ const CommentsService = {
     return {
       id: comment.id,
       text: xss(comment.text),
-      article_id: comment.article_id,
+      article_id: comment.restaurant_id,
       date_created: new Date(comment.date_created),
       user: {
         id: user.id,
         user_name: user.user_name,
-        full_name: user.full_name,
-        nickname: user.nickname,
         date_created: new Date(user.date_created),
         date_modified: new Date(user.date_modified) || null
       },

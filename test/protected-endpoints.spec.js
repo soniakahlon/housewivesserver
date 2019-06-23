@@ -7,9 +7,9 @@ describe.only('Protected endpoints', function() {
 
   const {
     testUsers,
-    testArticles,
+    testRestos,
     testComments,
-  } = helpers.makeArticlesFixtures()
+  } = helpers.makeRestosFixtures()
 
   before('make knex instance', () => {
     db = knex({
@@ -25,24 +25,24 @@ describe.only('Protected endpoints', function() {
 
   afterEach('cleanup', () => helpers.cleanTables(db))
 
-  beforeEach('insert articles', () =>
+  beforeEach('insert restaurants', () =>
     helpers.seedArticlesTables(
       db,
       testUsers,
-      testArticles,
+      testRestos,
       testComments,
     )
   )
 
   const protectedEndpoints = [
     {
-      name: 'GET /api/articles/:article_id',
-      path: '/api/articles/1',
+      name: 'GET /api/restaurants/:restaurant_id',
+      path: '/api/restaurants/1',
       method: supertest(app).get,
     },
     {
-      name: 'GET /api/articles/:article_id/comments',
-      path: '/api/articles/1/comments',
+      name: 'GET /api/restaurants/:restaurant_id/comments',
+      path: '/api/restaurants/1/comments',
       method: supertest(app).get,
     },
     {

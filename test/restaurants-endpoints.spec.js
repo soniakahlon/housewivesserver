@@ -7,9 +7,9 @@ describe('Restaurants Endpoints', function() {
 
   const {
     testUsers,
-    testRestaurants,
+    testRestos,
     testComments,
-  } = helpers.makeRestaurantsFixtures()
+  } = helpers.makeRestosFixtures()
 
   const authToken = req.get('Authorization') || ''
   
@@ -33,22 +33,22 @@ describe('Restaurants Endpoints', function() {
 
   describe.only(`Protected endpoints`, () => {
       beforeEach('insert restaurants', () =>
-        helpers.seedRestaurantsTables(
+        helpers.seedRestosTables(
           db,
           testUsers,
-          testRestaurants,
+          testRestos,
           testComments,
         )
       )
     
       const protectedEndpoints = [
            {
-             name: 'GET /api/articles/:article_id',
-             path: '/api/articles/1'
+             name: 'GET /api/restaurants/:restaurant_id',
+             path: '/api/restaurants/1'
            },
            {
-             name: 'GET /api/articles/:article_id/comments',
-             path: '/api/articles/1/comments'
+             name: 'GET /api/restaurants/:restaurant_id/comments',
+             path: '/api/restaurants/1/comments'
            },
          ]
         
@@ -89,7 +89,7 @@ describe('Restaurants Endpoints', function() {
   describe(`GET /api/restaurants`, () => {
     context(`Given no restaurants`, () => {
         beforeEach(() =>
-     db.into('blogful_users').insert(testUsers)
+     db.into('users').insert(testUsers)
    )
       it(`responds with 200 and an empty list`, () => {
         return supertest(app)
@@ -103,13 +103,13 @@ describe('Restaurants Endpoints', function() {
         helpers.seedRestaurantsTables(
           db,
           testUsers,
-          testRestaurants,
+          testRestos,
           testComments,
         )
       )
 
       it('responds with 200 and all of the restaurants', () => {
-        const expectedArestaurants = testRestaurants.map(restaurant =>
+        const expectedArestaurants = testRestos.map(restaurant =>
           helpers.makeExpectedRestaurant(
             testUsers,
             restaurant,
@@ -125,15 +125,15 @@ describe('Restaurants Endpoints', function() {
     context(`Given an XSS attack Restaurant`, () => {
       const testUser = helpers.makeUsersArray()[1]
       const {
-        maliciousRestaurant,
-        expectedRestaurant,
-      } = helpers.makeMaliciousRestaurant(testUser)
+        maliciousRestos,
+        expectedRestos,
+      } = helpers.makeMaliciousRestos(testUser)
 
       beforeEach('insert malicious Restaurant', () => {
-        return helpers.seedMaliciousRestaurant(
+        return helpers.seedMaliciousResto(
           db,
           testUser,
-          maliciousRestaurant,
+          maliciousResto,
         )
       })
 
@@ -143,8 +143,8 @@ describe('Restaurants Endpoints', function() {
           .set('Authorization', helpers.makeAuthHeader(userNoCreds))
           .expect(200)
           .expect(res => {
-            expect(res.body[0].title).to.eql(expectedRestaurant.title)
-            expect(res.body[0].content).to.eql(expectedRestaurant.content)
+            expect(res.body[0].title).to.eql(expectedResto.title)
+            expect(res.body[0].content).to.eql(expectedResto.content)
           })
       })
     })
@@ -152,7 +152,7 @@ describe('Restaurants Endpoints', function() {
 
   describe(`GET /api/restaurants/:restaurant_id`, () => {
     context(`Given no restaurants`, () => {
-      context(`Given no articles`, () => {
+      context(`Given no restaurants`, () => {
         beforeEach(() =>
 
        helpers.seedUsers(db, testUsers)
@@ -168,10 +168,10 @@ describe('Restaurants Endpoints', function() {
 
     context('Given there are restaurants in the database', () => {
       beforeEach('insert restaurants', () =>
-        helpers.seedArestaurantsTables(
+        helpers.seedRestosTables(
           db,
           testUsers,
-          testRestaurants,
+          testRestos,
           testComments,
         )
       )
@@ -180,12 +180,12 @@ describe('Restaurants Endpoints', function() {
         const RestaurantId = 2
         const expectedRestaurant = helpers.makeExpectedRestaurant(
           testUsers,
-          testArestaurants[restaurantId - 1],
+          testRestos[restaurantId - 1],
           testComments,
         )
 
         return supertest(app)
-          .get(`/api/arestaurants/${restaurantId}`)
+          .get(`/api/restaurants/${restaurantId}`)
           .set('Authorization', helpers.makeAuthHeader(userNoCreds))
           .expect(200, expectedRestaurant)
       })
@@ -194,39 +194,39 @@ describe('Restaurants Endpoints', function() {
     context(`Given an XSS attack Restaurant`, () => {
       const testUser = helpers.makeUsersArray()[1]
       const {
-        maliciousRestaurant,
-        expectedRestaurant,
-      } = helpers.makeMaliciousRestaurant(testUser)
+        maliciousRestos,
+        expectedRestos,
+      } = helpers.makeMaliciousRestos(testUser)
 
       beforeEach('insert malicious Restaurant', () => {
-        return helpers.seedMaliciousRestaurant(
+        return helpers.seedMaliciousResto(
           db,
           testUser,
-          maliciousRestaurant,
+          maliciousResto,
         )
       })
 
       it('removes XSS attack content', () => {
         return supertest(app)
-          .get(`/api/arestaurants/${maliciousRestaurant.id}`)
+          .get(`/api/arestaurants/${maliciousResto.id}`)
           .expect(200)
           .expect(res => {
-            expect(res.body.title).to.eql(expectedRestaurant.title)
-            expect(res.body.content).to.eql(expectedRestaurant.content)
+            expect(res.body.title).to.eql(expectedResto.title)
+            expect(res.body.content).to.eql(expectedResto.content)
           })
       })
     })
   })
 
   describe(`GET /api/arestaurants/:restaurant_id/comments`, () => {
-    context(`Given no arestaurants`, () => {
+    context(`Given no restaurants`, () => {
         beforeEach(() =>
         helpers.seedUsers(db, testUsers)
      )
       it(`responds with 404`, () => {
         const RestaurantId = 123456
         return supertest(app)
-          .get(`/api/arestaurants/${restaurantId}/comments`)
+          .get(`/api/restaurants/${restaurantId}/comments`)
           .set('Authorization', helpers.makeAuthHeader(userNoCreds))
           .expect(404, { error: `Restaurant doesn't exist` })
       })
@@ -234,22 +234,22 @@ describe('Restaurants Endpoints', function() {
 
     context('Given there are comments for Restaurant in the database', () => {
       beforeEach('insert restaurants', () =>
-        helpers.seedRestaurantsTables(
+        helpers.seedRestosTables(
           db,
           testUsers,
-          testRestaurants,
+          testRestos,
           testComments,
         )
       )
 
       it('responds with 200 and the specified comments', () => {
         const RestaurantId = 1
-        const expectedComments = helpers.makeExpectedRestaurantComments(
+        const expectedComments = helpers.makeExpectedRestoComments(
           testUsers, restaurantId, testComments
         )
 
         return supertest(app)
-          .get(`/api/arestaurants/${restaurantId}/comments`)
+          .get(`/api/restaurants/${restaurantId}/comments`)
           .set('Authorization', helpers.makeAuthHeader(userNoCreds))
           .expect(200, expectedComments)
       })

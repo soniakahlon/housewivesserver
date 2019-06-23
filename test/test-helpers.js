@@ -6,39 +6,39 @@ function seedUsers(db, users) {
      ...user,
      password: bcrypt.hashSync(user.password, 1)
    }))
-   return db.into('blogful_users').insert(preppedUsers)
+   return db.into('users').insert(preppedUsers)
      .then(() =>
-       // update the auto sequence to stay in sync
+      
        db.raw(
-         `SELECT setval('blogful_users_id_seq', ?)`,
+         `SELECT setval('users_id_seq', ?)`,
          [users[users.length - 1].id],
        )
      )
   }
   
-    function seedArticlesTables(db, users, articles, comments=[]) {
+    function seedRestosTables(db, users, restaurants, comments=[]) {
       
       return db.transaction(async trx => {
   
      await seedUsers(trx, users)
   
-     await trx.into('blogful_articles').insert(articles)      
+     await trx.into('restaurants').insert(restaurants)      
        
     
      await trx.raw(
-       `SELECT setval('blogful_articles_id_seq', ?)`,
-       [articles[articles.length - 1].id],
+       `SELECT setval('restaurants_id_seq', ?)`,
+       [restaurants[restaurants.length - 1].id],
      )
       
     })}
   
-    function seedMaliciousArticle(db, user, article) {
+    function seedMaliciousRestos(db, user, restaurant) {
   
    return seedUsers(db, [user])
         .then(() =>
           db
-            .into('blogful_articles')
-            .insert([article])
+            .into('restaurants')
+            .insert([restaurant])
         )
     }
 
@@ -52,16 +52,16 @@ function seedUsers(db, users) {
 
   module.exports = {
     makeUsersArray,
-    makeArticlesArray,
-    makeExpectedArticle,
-    makeExpectedArticleComments,
-    makeMaliciousArticle,
+    makeRestosArray,
+    makeExpectedResto,
+    makeExpectedRestoComments,
+    makeMaliciousResto,
     makeCommentsArray,
 
-    makeArticlesFixtures,
+    makeRestosFixtures,
     cleanTables,
-    seedArticlesTables,
-    seedMaliciousArticle,
+    seedRestosTables,
+    seedMaliciousResto,
    makeAuthHeader,
    seedUsers
   }

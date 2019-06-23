@@ -7,7 +7,7 @@ const helpers = require('./test-helpers')
 describe.only('Users Endpoints', function() {
   let db
 
-  const { testUsers } = helpers.makeArticlesFixtures()
+  const { testUsers } = helpers.makeRestosFixtures()
   const testUser = testUsers[0]
 
   before('make knex instance', () => {
@@ -57,7 +57,7 @@ describe.only('Users Endpoints', function() {
         const userShortPassword = {
           user_name: 'test user_name',
           password: '1234567',
-          full_name: 'test full_name',
+          
         }
         return supertest(app)
           .post('/api/users')
@@ -80,7 +80,7 @@ describe.only('Users Endpoints', function() {
                  const userPasswordStartsSpaces = {
                    user_name: 'test user_name',
                    password: ' 1Aa!2Bb@',
-                   full_name: 'test full_name',
+                  
                  }
                  return supertest(app)
                    .post('/api/users')
@@ -91,7 +91,7 @@ describe.only('Users Endpoints', function() {
                    const userPasswordEndsSpaces = {
                      user_name: 'test user_name',
                      password: '1Aa!2Bb@ ',
-                     full_name: 'test full_name',
+                  
                    }
                    return supertest(app)
                      .post('/api/users')
@@ -102,7 +102,7 @@ describe.only('Users Endpoints', function() {
                     const userPasswordNotComplex = {
                       user_name: 'test user_name',
                       password: '11AAaabb',
-                      full_name: 'test full_name',
+                     
                     }
                     return supertest(app)
                       .post('/api/users')
@@ -113,7 +113,7 @@ describe.only('Users Endpoints', function() {
                          const duplicateUser = {
                            user_name: testUser.user_name,
                            password: '11AAaa!!',
-                           full_name: 'test full_name',
+                          
                          }
                          return supertest(app)
                            .post('/api/users')
@@ -126,7 +126,7 @@ describe.only('Users Endpoints', function() {
                             const newUser = {
                               user_name: 'test user_name',
                               password: '11AAaa!!',
-                              full_name: 'test full_name',
+                             
                             }
                             return supertest(app)
                               .post('/api/users')
@@ -149,7 +149,7 @@ describe.only('Users Endpoints', function() {
                               })
                               .expect(res =>
                                  db
-                                   .from('blogful_users')
+                                   .from('users')
                                    .select('*')
                                    .where({ id: res.body.id })
                                    .first()

@@ -1,7 +1,7 @@
 const REGEX_UPPER_LOWER_NUMBER_SPECIAL = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/
 
 const xss = require('xss')
-
+const bcrypt = require('bcryptjs')
 const UsersService = {
     hasUserWithUserName(db, user_name) {
              return db('blogful_users')
@@ -12,7 +12,7 @@ const UsersService = {
            insertUser(db, newUser) {
                 return db
                   .insert(newUser)
-                  .into('blogful_users')
+                  .into('users')
                   .returning('*')
                   .then(([user]) => user)
               },
@@ -33,7 +33,9 @@ const UsersService = {
             }
             return null
     },
-
+    hashPassword(password) {
+           return bcrypt.hash(password, 12)
+         },
     serializeUser(user) {
             return {
               id: user.id,

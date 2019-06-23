@@ -6,9 +6,9 @@ describe('Comments Endpoints', function() {
   let db
 
   const {
-    testArticles,
+    testRestos,
     testUsers,
-  } = helpers.makeArticlesFixtures()
+  } = helpers.makeRestosFixtures()
 
   before('make knex instance', () => {
     db = knex({
@@ -25,11 +25,11 @@ describe('Comments Endpoints', function() {
   afterEach('cleanup', () => helpers.cleanTables(db))
 
   describe(`POST /api/comments`, () => {
-    beforeEach('insert articles', () =>
-      helpers.seedArticlesTables(
+    beforeEach('insert restaurants', () =>
+      helpers.seedRestosTables(
         db,
         testUsers,
-        testArticles,
+        testRestos,
       )
     )
     it(`responds 401 'Unauthorized request' when invalid password`, () => {
@@ -42,11 +42,11 @@ describe('Comments Endpoints', function() {
         
     it(`creates an comment, responding with 201 and the new comment`, function() {
       this.retries(3)
-      const testArticle = testArticles[0]
+      const testResto= testRestos[0]
       const testUser = testUsers[0]
       const newComment = {
         text: 'Test new comment',
-        article_id: testArticle.id,
+        restaurant_id: testResto.id,
         
       }
       return supertest(app)
@@ -57,7 +57,7 @@ describe('Comments Endpoints', function() {
         .expect(res => {
           expect(res.body).to.have.property('id')
           expect(res.body.text).to.eql(newComment.text)
-          expect(res.body.article_id).to.eql(newComment.article_id)
+          expect(res.body.restaurant_id).to.eql(newComment.restaurant_id)
           expect(res.body.user.id).to.eql(testUser.id)
           expect(res.headers.location).to.eql(`/api/comments/${res.body.id}`)
           const expectedDate = new Date().toLocaleString('en', { timeZone: 'UTC' })
@@ -66,13 +66,13 @@ describe('Comments Endpoints', function() {
         })
         .expect(res =>
           db
-            .from('blogful_comments')
+            .from('comments')
             .select('*')
             .where({ id: res.body.id })
             .first()
             .then(row => {
               expect(row.text).to.eql(newComment.text)
-              expect(row.article_id).to.eql(newComment.article_id)
+              expect(row.restaurant_id).to.eql(newComment.restaurant_id)
               expect(row.user_id).to.eql(testUser.id)
               const expectedDate = new Date().toLocaleString('en', { timeZone: 'UTC' })
               const actualDate = new Date(row.date_created).toLocaleString()
@@ -81,14 +81,14 @@ describe('Comments Endpoints', function() {
         )
     })
 
-    const requiredFields = ['text', 'article_id']
+    const requiredFields = ['text', 'restaurant_id']
 
     requiredFields.forEach(field => {
-      const testArticle = testArticles[0]
+      const testResto = testRestos[0]
       const testUser = testUsers[0]
       const newComment = {
         text: 'Test new comment',
-        article_id: testArticle.id,
+        restaurant_id: testResto.id,
       }
 
       it(`responds with 400 and an error message when the '${field}' is missing`, () => {
