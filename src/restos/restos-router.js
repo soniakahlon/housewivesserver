@@ -3,8 +3,6 @@ const express = require('express');
 const xss = require('xss'); 
 const RestosService = require('./restos-service');
 const { requireAuth } = require('../middleware/jwt-auth')
-
-
 const restosRouter = express.Router();
 const jsonParser = express.json();
 
@@ -30,7 +28,6 @@ restosRouter
   })
   .post(jsonParser, (req, res, next) => {
     const { name, nameofHw, city, comment } = req.body;
-    console.log(req.body)
     if(!name){
       return res.status(400).json({
         error: { message: 'Missing name in request' } 
@@ -52,7 +49,7 @@ restosRouter
     
     RestosService.insertRestos(
       req.app.get('db'),
-      newReto
+      newResto
     )
       .then(restaurant => {
         res

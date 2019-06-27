@@ -4,7 +4,7 @@ const xss = require('xss')
 const bcrypt = require('bcryptjs')
 const UsersService = {
     hasUserWithUserName(db, user_name) {
-             return db('blogful_users')
+             return db('users')
                .where({ user_name })
                .first()
                .then(user => !!user)

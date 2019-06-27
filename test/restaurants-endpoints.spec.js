@@ -178,7 +178,7 @@ describe('Restaurants Endpoints', function() {
 
       it('responds with 200 and the specified restaurant', () => {
         const RestaurantId = 2
-        const expectedRestaurant = helpers.makeExpectedRestaurant(
+        const expectedRestaurant = helpers.makeExpectedResto(
           testUsers,
           testRestos[restaurantId - 1],
           testComments,
