@@ -6,6 +6,6 @@ CREATE TABLE comments (
         REFERENCES restaurants(id) ON DELETE CASCADE NOT NULL,
     user_id INTEGER
         REFERENCES users(id) ON DELETE CASCADE NOT NULL
-        -- PRIMARY KEY (user_id, restaurant_id)
+       
 );
 );
