@@ -1,1 +1,1 @@
-DROP TABlE users;
+DROP TABlE IF EXISTS users;

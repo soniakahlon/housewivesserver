@@ -1,4 +1,4 @@
-INSERT INTO restaurants (id, name, nameofHW ,city, comment)
+INSERT INTO restaurants (id, restoName, nameofHW ,city, comment)
 VALUES
   (1, 'Sur', 'Lisa Vanderpump', 'Beverly Hills', 'She was arranging flower'),
   (2, 'Buddakan', 'Ramona Singer', 'New York', 'She was drinkin Pinot Grigio'),
