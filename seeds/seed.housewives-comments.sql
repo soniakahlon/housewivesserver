@@ -3,14 +3,14 @@ INSERT INTO comments (
   restaurant_id,
   user_id
 ) VALUES
-  (
+  ((
     'I was there too!',
     1,
     2
   ),
 
   (
-    'Wow! I can/t believe she eats hot dogs!,
+    'Wow! I can/t believe she eats hot dogs!',
     1,
     3
   ),
@@ -29,5 +29,5 @@ INSERT INTO comments (
     'Yaas! She is my favorite',
     2,
     6
+  ), 
   ),
- 
