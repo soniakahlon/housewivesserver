@@ -37,9 +37,9 @@ const CommentsService = {
       .insert(newComment)
       .into('comments')
       .returning('*')
-      .then(([comment]) => comment)
-      .then(comment =>
-        CommentsService.getById(db, comment.id)
+      .then(([comments]) => comments)
+      .then(comments =>
+        CommentsService.getById(db, comments.id)
       )
   },
 
@@ -51,10 +51,10 @@ const CommentsService = {
       article_id: comment.restaurant_id,
       date_created: new Date(comment.date_created),
       user: {
-        id: user.id,
-        user_name: user.user_name,
-        date_created: new Date(user.date_created),
-        date_modified: new Date(user.date_modified) || null
+        id: comment.id,
+        text: comment.text,
+        date_created: new Date(comment.date_created),
+        date_modified: new Date(comment.date_modified) || null
       },
     }
   }

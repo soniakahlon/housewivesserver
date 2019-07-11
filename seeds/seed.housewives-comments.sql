@@ -1,7 +1,7 @@
 INSERT INTO comments (
   text,
-  restaurants_id,
-  users_id
+  restaurant_id,
+  user_id
 ) VALUES
   ((
     'I was there too!',

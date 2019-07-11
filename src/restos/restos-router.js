@@ -8,7 +8,7 @@ const jsonParser = express.json();
 
 const serializeRestos = (restaurant) => ({
   id: restaurant.id,
-  name: xss(restaurant.name),
+  name: xss(restaurant.restoName),
   nameofHw: restaurant.nameofHw,
   city: restaurant.city,
   comment: restaurant.comment,
@@ -27,8 +27,8 @@ restosRouter
       .catch(next);
   })
   .post(jsonParser, (req, res, next) => {
-    const { name, nameofHw, city, comment } = req.body;
-    if(!name){
+    const { restoName, nameofHw, city, comment } = req.body;
+    if(!restoName){
       return res.status(400).json({
         error: { message: 'Missing name in request' } 
       });
@@ -45,7 +45,7 @@ restosRouter
         });
       }
     
-    const newResto = { name, nameofHw, city, comment};
+    const newResto = { restoName, nameofHw, city, comment};
     
     RestosService.insertRestos(
       req.app.get('db'),
@@ -93,8 +93,8 @@ restosRouter
       .catch(next);
   })
   .patch(jsonParser, (req, res, next) => {
-    const { name, nameofHw, city, comment } = req.body;
-    if(!name) {
+    const { restoName, nameofHw, city} = req.body;
+    if(!restoName) {
       return res.status(400).json({
         error: {
           message: 'Request must have a name'
@@ -118,14 +118,14 @@ restosRouter
       }
 
     const restoToUpdate ={
-      name,
+      restoName,
       nameofHw,
       city
     };
 
     RestosService.updateResto(
       req.app.get('db'),
-      req.params.note_id,
+      req.params.restaurant_id,
       restoToUpdate
     )
       .then( () => {

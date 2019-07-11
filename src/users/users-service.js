@@ -3,9 +3,9 @@ const REGEX_UPPER_LOWER_NUMBER_SPECIAL = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*
 const xss = require('xss')
 const bcrypt = require('bcryptjs')
 const UsersService = {
-    hasUserWithUserName(db, user_name) {
+    hasUserWithUserName(db, users_name) {
              return db('users')
-               .where({ user_name })
+               .where({ users_name })
                .first()
                .then(user => !!user)
            },
@@ -40,7 +40,7 @@ const UsersService = {
             return {
               id: user.id,
               
-              user_name: xss(user.user_name),
+              username: xss(user.username),
               
               date_created: new Date(user.date_created),
             }

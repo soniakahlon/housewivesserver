@@ -4,7 +4,7 @@ CREATE TABLE comments (
     date_created TIMESTAMP DEFAULT now() NOT NULL,
     restaurant_id INTEGER
         REFERENCES restaurants(id) ON DELETE CASCADE NOT NULL,
-    users_id INTEGER
+    user_id INTEGER
         REFERENCES users(id) ON DELETE CASCADE NOT NULL
        
 );
